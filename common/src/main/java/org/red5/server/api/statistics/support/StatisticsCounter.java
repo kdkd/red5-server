@@ -21,17 +21,18 @@ public class StatisticsCounter {
     private AtomicInteger current = new AtomicInteger();
 
     /** Total number */
-    private int total;
+    private AtomicInteger total = new AtomicInteger();
 
     /** Highest / max number during collection */
-    private int max;
+    private AtomicInteger max = new AtomicInteger();
 
     /**
      * Increment statistics by one.
      */
     public void increment() {
-        max = Math.max(max, current.incrementAndGet());
-        total++;
+        int curr = current.incrementAndGet();
+        max.accumulateAndGet(curr, Math::max);
+        total.incrementAndGet();
     }
 
     /**
@@ -56,7 +57,7 @@ public class StatisticsCounter {
      * @return total
      */
     public int getTotal() {
-        return total;
+        return total.intValue();
     }
 
     /**
@@ -65,7 +66,7 @@ public class StatisticsCounter {
      * @return max
      */
     public int getMax() {
-        return max;
+        return max.intValue();
     }
 
     /*
