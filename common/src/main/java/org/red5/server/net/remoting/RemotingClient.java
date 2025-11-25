@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -115,7 +116,13 @@ public class RemotingClient implements IRemotingClient {
      */
     public void setPoolSize(int poolSize) {
         this.poolSize = poolSize;
-        executor = Executors.newFixedThreadPool(poolSize);
+        if (executor == null) {
+            executor = Executors.newFixedThreadPool(poolSize);
+        } else {
+            ThreadPoolExecutor threadPool = (ThreadPoolExecutor) executor;
+            threadPool.setCorePoolSize(poolSize);
+            threadPool.setMaximumPoolSize(poolSize);
+        }
     }
 
     /**
