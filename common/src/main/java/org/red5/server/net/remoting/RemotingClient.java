@@ -352,7 +352,8 @@ public class RemotingClient implements IRemotingClient {
             }
         } catch (Exception ex) {
             log.error("Error while invoking remoting method: {}", method, ex);
-            post.abort();
+            if (post != null)
+                post.abort();
         } finally {
             if (resultBuffer != null) {
                 resultBuffer.free();
