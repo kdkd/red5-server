@@ -41,6 +41,10 @@ public class Deserializer {
      */
     public synchronized static void loadBlackList() throws IOException {
         try (InputStream is = Deserializer.class.getClassLoader().getResourceAsStream("org/red5/io/object/black-list.properties")) {
+            if (is == null) {
+                BLACK_LIST = Collections.emptySet();
+                return;
+            }
             Properties bl = new Properties();
             bl.load(is);
             Set<String> set = new HashSet<>();
